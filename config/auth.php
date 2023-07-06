@@ -40,6 +40,18 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'parent' => [
+            'driver' => 'session',
+            'provider' => 'parents',
+        ],
+        'canteen' => [
+            'driver' => 'session',
+            'provider' => 'canteens',
+        ],
+        'school' => [
+            'driver' => 'session',
+            'provider' => 'schools',
+        ],
     ],
 
     /*
@@ -63,6 +75,18 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'parents' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Guardian::class,
+        ],
+        'canteens' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Canteen::class,
+        ],
+        'schools' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\School::class,
         ],
 
         // 'users' => [
