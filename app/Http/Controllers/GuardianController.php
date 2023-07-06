@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guardian;
+use App\Models\School;
 use Illuminate\Http\Request;
 
 class GuardianController extends Controller
@@ -28,7 +29,33 @@ class GuardianController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'school' => 'required|numeric',
+            'phone' => 'required',
+            'password' => 'required|string',
+            'confirmPassword' => 'required|string'
+        ]);
+
+        if ($request->password == $request->confirmPassword) {
+            $school = School::find($request->school);
+            if ($school != null) {
+                $guardian = new Guardian;
+                $guardian->name = $request->name;
+                $guardian->email = $request->email;
+                $guardian->phone = $request->phone;
+                $guardian->password = bcrypt($request->password);
+                $guardian->school_id = $request->school;
+                $guardian->student_id = null;
+                $guardian->save();
+                return redirect(route('login'));
+            } else {
+                return redirect('/register')->withErrors('School not found');
+            }
+        } else {
+            return redirect('/register')->withErrors('Passwords not match');
+        }
     }
 
     /**

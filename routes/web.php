@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GuardianController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'index')->name('login');
 Route::get('/register', [AuthController::class, 'registerSchools']);
+Route::post('/register', [GuardianController::class, 'store']);
