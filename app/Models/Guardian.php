@@ -8,4 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Guardian extends Authenticatable
 {
     use HasFactory;
+
+    public function students()
+    {
+        return $this->belongsTo(Student::class, 'school_id');
+    }
 }

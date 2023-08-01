@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Canteen;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
-class CanteenController extends Controller
+class TransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $canteens = Canteen::latest()->get();
-        $canteens->load('schools');
-        return view('admin.canteen', ['data' => $canteens]);
+        $transactions = Transaction::latest()->get();
+        $transactions->load('students', 'canteens', 'guardians', 'schools');
+        return view('admin.transactions', ['data' => $transactions]);
     }
 
     /**
@@ -36,7 +36,7 @@ class CanteenController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Canteen $canteen)
+    public function show(Transaction $transaction)
     {
         //
     }
@@ -44,7 +44,7 @@ class CanteenController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Canteen $canteen)
+    public function edit(Transaction $transaction)
     {
         //
     }
@@ -52,7 +52,7 @@ class CanteenController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Canteen $canteen)
+    public function update(Request $request, Transaction $transaction)
     {
         //
     }
@@ -60,7 +60,7 @@ class CanteenController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Canteen $canteen)
+    public function destroy(Transaction $transaction)
     {
         //
     }

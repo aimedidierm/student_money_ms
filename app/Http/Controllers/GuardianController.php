@@ -13,7 +13,9 @@ class GuardianController extends Controller
      */
     public function index()
     {
-        //
+        $parents = Guardian::latest()->get();
+        $parents->load('students.schools');
+        return view('admin.parents', ['data' => $parents]);
     }
 
     /**

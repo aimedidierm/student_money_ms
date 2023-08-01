@@ -1,7 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CanteenController;
 use App\Http\Controllers\GuardianController;
+use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,12 +27,14 @@ Route::post('/register', [GuardianController::class, 'store']);
 Route::get('logout', [AuthController::class, 'logout']);
 
 Route::group(["prefix" => "admin", "middleware" => ["auth", "isAdmin"], "as" => "admin."], function () {
-    Route::view('/', 'admin.blank');
-    Route::view('/canteen', 'admin.blank');
-    Route::view('/students', 'admin.blank');
-    Route::view('/parents', 'admin.blank');
-    Route::view('/transactions', 'admin.blank');
-    Route::view('/settings', 'admin.blank');
+    Route::resource('/', SchoolController::class)->only('index', 'store');
+    Route::post('/school/{school}', [SchoolController::class, 'update']);
+    Route::get('/school/{school}', [SchoolController::class, 'destroy']);
+    Route::get('/canteen', [CanteenController::class, 'index']);
+    Route::get('/students', [StudentController::class, 'index']);
+    Route::get('/parents', [GuardianController::class, 'index']);
+    Route::get('/transactions', [TransactionController::class, 'index']);
+    Route::resource('/settings', UserController::class)->only('index', 'update');
 });
 
 Route::group(["prefix" => "school", "middleware" => ["auth:school", "isSchool"], "as" => "school."], function () {

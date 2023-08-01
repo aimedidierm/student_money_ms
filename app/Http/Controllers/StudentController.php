@@ -12,7 +12,9 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        $students = Student::latest()->get();
+        $students->load('schools');
+        return view('admin.student', ['data' => $students]);
     }
 
     /**
