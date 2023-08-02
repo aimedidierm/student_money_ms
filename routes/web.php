@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CanteenController;
 use App\Http\Controllers\GuardianController;
+use App\Http\Controllers\LimitController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TransactionController;
@@ -63,8 +64,10 @@ Route::group(["prefix" => "canteen", "middleware" => ["auth:canteen", "isCanteen
 });
 
 Route::group(["prefix" => "parent", "middleware" => ["auth:parent", "isGuardian"], "as" => "canteen."], function () {
-    Route::view('/', 'parent.blank');
-    Route::view('/send', 'parent.blank');
-    Route::view('/student', 'parent.blank');
-    Route::view('/settings', 'parent.blank');
+    Route::get('/', [StudentController::class, 'sendMoney']);
+    Route::post('/student', [LimitController::class, 'store']);
+    Route::post('/send', [StudentController::class, 'sendMoneyToStudent']);
+    Route::get('/student', [LimitController::class, 'index']);
+    Route::get('/settings', [GuardianController::class, 'parentShow']);
+    Route::put('/settings', [GuardianController::class, 'updateProfile']);
 });

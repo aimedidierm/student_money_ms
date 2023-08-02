@@ -109,4 +109,28 @@ class GuardianController extends Controller
     {
         //
     }
+
+    public function parentShow()
+    {
+        $guardian = Guardian::find(Auth::guard('parent')->id());
+        return view('parent.settings', ['data' => $guardian]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+            'confirmPassword' => 'required|string'
+        ]);
+
+        $parent = Guardian::find(Auth::guard('parent')->id());
+
+        if ($request->password == $request->confirmPassword) {
+            $parent->password = bcrypt($request->password);
+            $parent->update();
+            return redirect('/parent/settings');
+        } else {
+            return redirect('/parent/settings')->withErrors('Passwords not match');
+        }
+    }
 }

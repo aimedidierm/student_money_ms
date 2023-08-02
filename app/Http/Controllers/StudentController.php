@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guardian;
 use App\Models\Student;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -90,6 +92,47 @@ class StudentController extends Controller
         if ($student != null) {
             $student->delete();
             return redirect('/school');
+        } else {
+            return back()->withErrors('Student not found');
+        }
+    }
+
+    public function sendMoney()
+    {
+        $student = Guardian::find(Auth::guard('parent')->id());
+        $student->load('students');
+        return view('parent.send', ['data' => $student]);
+    }
+
+    public function sendMoneyToStudent(Request $request)
+    {
+        $request->validate([
+            'student' => 'required|numeric',
+            'amount' => 'required|numeric',
+            'phone' => 'required|numeric'
+        ]);
+
+        $student = Student::find($request->student);
+
+        if ($student != null) {
+
+            //Send request to phone
+
+            //Enter data in pending table
+
+            $newBalance = $student->balance + $request->amount;
+            $student->balance = $newBalance;
+            $student->update();
+            $transaction = new Transaction;
+            $transaction->amount = $request->amount;
+            $transaction->status = 'debit';
+            $transaction->student_id = $request->student;
+            $transaction->guardian_id = Auth::guard('parent')->id();
+            $transaction->school_id = Auth::guard('parent')->user()->school_id;
+            $transaction->created_at = now();
+            $transaction->updated_at = null;
+            $transaction->save();
+            return redirect('/parent');
         } else {
             return back()->withErrors('Student not found');
         }

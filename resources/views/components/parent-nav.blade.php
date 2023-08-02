@@ -5,12 +5,7 @@
                 <li>
                     <a href="/parent"
                         class="{{ request()->is('parent') ? 'text-blue-600 dark:text-blue-600' : 'text-gray-900 dark:text-white' }} hover:underline"
-                        aria-current="page">Dashboard</a>
-                </li>
-                <li>
-                    <a href="/parent/send"
-                        class="{{ request()->is('parent/send') ? 'text-blue-600 dark:text-blue-600' : 'text-gray-900 dark:text-white' }} hover:underline">Send
-                        money</a>
+                        aria-current="page">Send money</a>
                 </li>
                 <li>
                     <a href="/parent/student"
