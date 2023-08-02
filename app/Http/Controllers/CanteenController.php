@@ -30,7 +30,8 @@ class CanteenController extends Controller
      */
     public function create()
     {
-        //
+        $canteen = Canteen::find(Auth::guard('canteen')->id());
+        return view('canteen.settings', ['data' => $canteen]);
     }
 
     /**
@@ -100,6 +101,24 @@ class CanteenController extends Controller
             return redirect('/school/canteen');
         } else {
             return back()->withErrors('Canteen not found');
+        }
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+            'confirmPassword' => 'required|string'
+        ]);
+
+        $canteen = Canteen::find(Auth::guard('canteen')->id());
+
+        if ($request->password == $request->confirmPassword) {
+            $canteen->password = bcrypt($request->password);
+            $canteen->update();
+            return redirect('/canteen/settings');
+        } else {
+            return redirect('/canteen/settings')->withErrors('Passwords not match');
         }
     }
 }

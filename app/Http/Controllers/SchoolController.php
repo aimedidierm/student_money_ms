@@ -104,7 +104,7 @@ class SchoolController extends Controller
         $school = School::find(Auth::guard('school')->id());
 
         if ($request->password == $request->confirmPassword) {
-            $school->password = $request->password;
+            $school->password = bcrypt($request->password);
             $school->update();
             return redirect('/school/settings');
         } else {

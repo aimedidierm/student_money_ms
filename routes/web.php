@@ -58,7 +58,8 @@ Route::group(["prefix" => "canteen", "middleware" => ["auth:canteen", "isCanteen
     Route::view('/', 'canteen.blank');
     Route::view('/withdraw', 'canteen.blank');
     Route::view('/transactions', 'canteen.blank');
-    Route::view('/settings', 'canteen.blank');
+    Route::get('/settings', [CanteenController::class, 'create']);
+    Route::put('/settings', [CanteenController::class, 'updateProfile']);
 });
 
 Route::group(["prefix" => "parent", "middleware" => ["auth:parent", "isGuardian"], "as" => "canteen."], function () {
