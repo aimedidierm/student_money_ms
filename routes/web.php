@@ -7,6 +7,7 @@ use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WithdrawController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,12 +39,19 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "isAdmin"], "as" => 
 });
 
 Route::group(["prefix" => "school", "middleware" => ["auth:school", "isSchool"], "as" => "school."], function () {
-    Route::view('/', 'school.blank');
-    Route::view('/parents', 'school.blank');
-    Route::view('/canteen', 'school.blank');
-    Route::view('/withdraw', 'school.blank');
-    Route::view('/transactions', 'school.blank');
-    Route::view('/settings', 'school.blank');
+    Route::get('/', [StudentController::class, 'create']);
+    Route::post('/', [StudentController::class, 'store']);
+    Route::post('/students/{student}', [StudentController::class, 'update']);
+    Route::get('/students/{student}', [StudentController::class, 'destroy']);
+    Route::get('/parents', [GuardianController::class, 'create']);
+    Route::post('/parents/update', [GuardianController::class, 'update']);
+    Route::get('/canteen', [CanteenController::class, 'schoolList']);
+    Route::put('/canteen', [CanteenController::class, 'update']);
+    Route::resource('/canteen', CanteenController::class)->only('store', 'destroy');
+    Route::resource('/withdraw', WithdrawController::class)->only('index', 'store');
+    Route::get('/transactions', [TransactionController::class, 'create']);
+    Route::get('/settings', [SchoolController::class, 'create']);
+    Route::put('/settings', [SchoolController::class, 'updateProfile']);
 });
 
 Route::group(["prefix" => "canteen", "middleware" => ["auth:canteen", "isCanteen"], "as" => "canteen."], function () {

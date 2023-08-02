@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -22,7 +23,8 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        $students = Student::latest()->where('school_id', Auth::guard('school')->id())->get();
+        return view('school.students', ['data' => $students]);
     }
 
     /**
@@ -30,7 +32,18 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'regNumber' => 'required|string'
+        ]);
+
+        $student = new Student;
+        $student->name = $request->name;
+        $student->regNumber = $request->regNumber;
+        $student->password = bcrypt('password');
+        $student->school_id = Auth::guard('school')->id();
+        $student->save();
+        return redirect('/school');
     }
 
     /**
@@ -54,7 +67,19 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string'
+        ]);
+
+        if ($student != null) {
+            $student->name = $request->name;
+            $student->regNumber = $request->email;
+            $student->update();
+            return redirect('/school');
+        } else {
+            return back()->withErrors('Student acoount not found');
+        }
     }
 
     /**
@@ -62,6 +87,11 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        if ($student != null) {
+            $student->delete();
+            return redirect('/school');
+        } else {
+            return back()->withErrors('Student not found');
+        }
     }
 }

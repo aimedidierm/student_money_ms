@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Canteen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CanteenController extends Controller
 {
@@ -15,6 +16,13 @@ class CanteenController extends Controller
         $canteens = Canteen::latest()->get();
         $canteens->load('schools');
         return view('admin.canteen', ['data' => $canteens]);
+    }
+
+    public function schoolList()
+    {
+        $canteens = Canteen::latest()->where('school_id', Auth::guard('school')->id())->get();
+        $canteens->load('schools');
+        return view('school.canteen', ['data' => $canteens]);
     }
 
     /**
@@ -30,7 +38,19 @@ class CanteenController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+        ]);
+
+        $canteen = new Canteen;
+        $canteen->name = $request->name;
+        $canteen->email = $request->email;
+        $canteen->password = bcrypt('password');
+        $canteen->school_id = Auth::guard('school')->id();
+        $canteen->created_at = now();
+        $canteen->save();
+        return redirect('/school/canteen');
     }
 
     /**
@@ -52,9 +72,22 @@ class CanteenController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Canteen $canteen)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'id' => 'required|numeric',
+        ]);
+        $canteen = Canteen::find($request->id);
+        if ($canteen != null) {
+            $canteen->name = $request->name;
+            $canteen->email = $request->email;
+            $canteen->update();
+            return redirect('/school/canteen');
+        } else {
+            return back()->withErrors('Canteen not found');
+        }
     }
 
     /**
@@ -62,6 +95,11 @@ class CanteenController extends Controller
      */
     public function destroy(Canteen $canteen)
     {
-        //
+        if ($canteen != null) {
+            $canteen->delete();
+            return redirect('/school/canteen');
+        } else {
+            return back()->withErrors('Canteen not found');
+        }
     }
 }

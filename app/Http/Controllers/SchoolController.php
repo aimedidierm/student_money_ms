@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\School;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SchoolController extends Controller
 {
@@ -21,7 +22,8 @@ class SchoolController extends Controller
      */
     public function create()
     {
-        //
+        $school = School::find(Auth::guard('school')->id());
+        return view('school.settings', ['data' => $school]);
     }
 
     /**
@@ -89,6 +91,24 @@ class SchoolController extends Controller
             return redirect('/admin');
         } else {
             return back()->withErrors('School acoount not found');
+        }
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+            'confirmPassword' => 'required|string'
+        ]);
+
+        $school = School::find(Auth::guard('school')->id());
+
+        if ($request->password == $request->confirmPassword) {
+            $school->password = $request->password;
+            $school->update();
+            return redirect('/school/settings');
+        } else {
+            return redirect('/school/settings')->withErrors('Passwords not match');
         }
     }
 }

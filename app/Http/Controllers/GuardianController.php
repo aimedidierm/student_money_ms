@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Guardian;
 use App\Models\School;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GuardianController extends Controller
 {
@@ -23,7 +25,10 @@ class GuardianController extends Controller
      */
     public function create()
     {
-        //
+        $parents = Guardian::latest()->where('school_id', Auth::guard('school')->id())->get();
+        $parents->load('students');
+        $students = Student::where('school_id', Auth::guard('school')->id())->get();
+        return view('school.parents', ['data' => $parents, 'students' => $students]);
     }
 
     /**
@@ -79,9 +84,22 @@ class GuardianController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Guardian $guardian)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'parent' => 'required|numeric',
+            'student' => 'required|numeric',
+        ]);
+
+        $parent = Guardian::find($request->parent);
+        $student = Student::find($request->student);
+        if (($parent && $student) != null) {
+            $parent->student_id = $request->student;
+            $parent->update();
+            return redirect('/school/parents');
+        } else {
+            return redirect('/school/parents')->withErrors('Student or parent not found');
+        }
     }
 
     /**

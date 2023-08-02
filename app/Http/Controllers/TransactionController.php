@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
@@ -22,7 +23,9 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        //
+        $transactions = Transaction::latest()->where('school_id', Auth::guard('school')->id())->get();
+        $transactions->load('students', 'canteens', 'guardians', 'schools');
+        return view('school.transactions', ['data' => $transactions]);
     }
 
     /**
