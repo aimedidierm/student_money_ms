@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Canteen;
 use App\Models\Student;
 use App\Models\Transaction;
 use App\Models\Withdraw;
@@ -26,7 +27,9 @@ class WithdrawController extends Controller
      */
     public function create()
     {
-        //
+        $withdraws = Withdraw::latest()->where('canteen_id', Auth::guard('canteen')->id())->get();
+        $withdraws->load('students');
+        return view('canteen.withdraw', ['data' => $withdraws]);
     }
 
     /**
@@ -97,5 +100,36 @@ class WithdrawController extends Controller
     public function destroy(Withdraw $withdraw)
     {
         //
+    }
+
+    public function canteenWithdraw(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|numeric',
+            'phone' => 'required|numeric',
+        ]);
+        $canteen = Canteen::find(Auth::guard('canteen')->id());
+        if ($request->amount <= $canteen->balance) {
+            $newBalance = $canteen->balance - $request->amount;
+            $canteen->balance = $newBalance;
+            $canteen->update();
+            $withdraw = new Withdraw;
+            $withdraw->amount = $request->amount;
+            $withdraw->phone = $request->phone;
+            $withdraw->canteen_id = $canteen->id;
+            $withdraw->school_id = Auth::guard('canteen')->user()->school_id;
+            $withdraw->created_at = now();
+            $withdraw->save();
+            $transaction = new Transaction;
+            $transaction->amount = $request->amount;
+            $transaction->status = 'credit';
+            $transaction->canteen_id = $canteen->id;
+            $transaction->school_id = Auth::guard('canteen')->user()->school_id;
+            $transaction->created_at = now();
+            $transaction->save();
+            return redirect('/canteen/withdraw');
+        } else {
+            return redirect('/canteen/withdraw')->withErrors('Insuficient balance');
+        }
     }
 }

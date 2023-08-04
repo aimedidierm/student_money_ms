@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Limit;
+use App\Models\Student;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class TransactionController extends Controller
 {
@@ -66,5 +70,62 @@ class TransactionController extends Controller
     public function destroy(Transaction $transaction)
     {
         //
+    }
+
+    public function canteenList()
+    {
+        $transactions = Transaction::latest()->where('canteen_id', Auth::guard('canteen')->id())->get();
+        $transactions->load('students');
+        return view('canteen.transactions', ['data' => $transactions]);
+    }
+
+    public function canteenPurchaseView(Request $request)
+    {
+        $request->validate([
+            'regNumber' => 'required|string',
+            'amount' => 'required|numeric',
+            'password' => 'required|string',
+        ]);
+
+        $student = Student::where('regNumber', $request->regNumber)->first();
+        if ($student != null) {
+
+            $passwordMatch = Hash::check($request->password, $student->password);
+            if ($passwordMatch) {
+                if ($request->amount <= $student->balance) {
+                    $limit = Limit::where('student_id', $student->id)->first();
+                    $now = Carbon::now();
+                    $startOfDay = $now->copy()->startOfDay();
+                    $endOfDay = $now->copy()->endOfDay();
+                    $total = Transaction::whereBetween('created_at', [$startOfDay, $endOfDay])
+                        ->where('student_id', $student->id)
+                        ->sum('amount');
+                    if ($total <= $limit->amount) {
+                        $newBalance = $student->balance - $request->amount;
+                        $studentModel = Student::find($student->id);
+                        $studentModel->balance = $newBalance;
+                        $studentModel->update();
+                        $transaction = new Transaction;
+                        $transaction->amount = $request->amount;
+                        $transaction->status = 'debit';
+                        $transaction->student_id = $student->id;
+                        $transaction->canteen_id = Auth::guard('canteen')->id();
+                        $transaction->school_id = Auth::guard('canteen')->user()->school_id;
+                        $transaction->created_at = now();
+                        $transaction->updated_at = null;
+                        $transaction->save();
+                        return redirect('/canteen');
+                    } else {
+                        return redirect('/canteen')->withErrors('You exceed daily limit');
+                    }
+                } else {
+                    return redirect('/canteen')->withErrors('Insuficient balance');
+                }
+            } else {
+                return redirect('/canteen')->withErrors('Password not correct');
+            }
+        } else {
+            return redirect('/canteen')->withErrors('Student not found');
+        }
     }
 }

@@ -22,7 +22,7 @@
             <div class="mb-4">
                 <label for="email" class="block font-medium mb-2">Amount / Day: </label>
                 <input type="number" id="number" name="amount" class="w-full border border-gray-300 rounded px-4 py-2"
-                    placeholder="Enter amount to be send" value="{{$amount->amount}}" required>
+                    placeholder="Enter amount to be sent" value="{{ $amount->amount ?? '' }}" required>
             </div>
             <div class="flex justify-end">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-4 py-2">Send

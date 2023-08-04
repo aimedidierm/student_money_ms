@@ -56,9 +56,11 @@ Route::group(["prefix" => "school", "middleware" => ["auth:school", "isSchool"],
 });
 
 Route::group(["prefix" => "canteen", "middleware" => ["auth:canteen", "isCanteen"], "as" => "canteen."], function () {
-    Route::view('/', 'canteen.blank');
-    Route::view('/withdraw', 'canteen.blank');
-    Route::view('/transactions', 'canteen.blank');
+    Route::view('/', 'canteen.purchase');
+    Route::post('/buy', [TransactionController::class, 'canteenPurchaseView']);
+    Route::get('/withdraw', [WithdrawController::class, 'create']);
+    Route::post('/withdraw', [WithdrawController::class, 'canteenWithdraw']);
+    Route::get('/transactions', [TransactionController::class, 'canteenList']);
     Route::get('/settings', [CanteenController::class, 'create']);
     Route::put('/settings', [CanteenController::class, 'updateProfile']);
 });
