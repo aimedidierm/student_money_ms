@@ -36,14 +36,19 @@ class GuardianController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'school' => 'required|numeric',
-            'phone' => 'required',
-            'password' => 'required|string',
-            'confirmPassword' => 'required|string'
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|string',
+                'email' => ['required', 'email', new \App\Rules\UniqueEmailAcrossTables],
+                'school' => 'required|numeric',
+                'password' => 'required|string',
+                'confirmPassword' => 'required|string',
+                'phone' => 'required|numeric|regex:/^07\d{8}$/',
+            ],
+            $messages = [
+                'phone.regex' => 'The phone number must start with "07" and be 10 digits long.',
+            ]
+        );
 
         if ($request->password == $request->confirmPassword) {
             $school = School::find($request->school);

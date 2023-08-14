@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Canteen;
 use App\Models\Limit;
 use App\Models\Student;
 use App\Models\Transaction;
@@ -100,11 +101,15 @@ class TransactionController extends Controller
                     $total = Transaction::whereBetween('created_at', [$startOfDay, $endOfDay])
                         ->where('student_id', $student->id)
                         ->sum('amount');
+                    $total = $total + $request->amount;
                     if ($total <= $limit->amount) {
                         $newBalance = $student->balance - $request->amount;
                         $studentModel = Student::find($student->id);
                         $studentModel->balance = $newBalance;
                         $studentModel->update();
+                        $canteenModel = Canteen::find(Auth::id());
+                        $canteenModel->balance = Auth::guard('canteen')->user()->balance + $request->amount;
+                        $canteenModel->update();
                         $transaction = new Transaction;
                         $transaction->amount = $request->amount;
                         $transaction->status = 'debit';

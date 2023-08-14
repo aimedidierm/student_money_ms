@@ -57,10 +57,18 @@
                             {{$item->name}}
                         </th>
                         <td class="px-6 py-4">
+                            @if ($item->students != null)
                             {{$item->students->name}}
+                            @else
+                            None
+                            @endif
                         </td>
                         <td class="px-2 py-2 bg-gray-50 dark:bg-gray-800">
+                            @if ($item->students != null)
                             {{$item->students->schools->name}}
+                            @else
+                            None
+                            @endif
                         <td class="px-6 py-4">
                             {{$item->phone}}
                         </td>

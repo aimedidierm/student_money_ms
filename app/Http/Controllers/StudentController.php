@@ -106,11 +106,16 @@ class StudentController extends Controller
 
     public function sendMoneyToStudent(Request $request)
     {
-        $request->validate([
-            'student' => 'required|numeric',
-            'amount' => 'required|numeric',
-            'phone' => 'required|numeric'
-        ]);
+        $request->validate(
+            [
+                'student' => 'required|numeric',
+                'amount' => 'required|numeric',
+                'phone' => 'required|numeric|regex:/^07\d{8}$/',
+            ],
+            $messages = [
+                'phone.regex' => 'The phone number must start with "07" and be 10 digits long.'
+            ]
+        );
 
         $student = Student::find($request->student);
 
