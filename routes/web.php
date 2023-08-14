@@ -29,7 +29,7 @@ Route::post('/register', [GuardianController::class, 'store']);
 Route::get('logout', [AuthController::class, 'logout']);
 
 Route::group(["prefix" => "admin", "middleware" => ["auth", "isAdmin"], "as" => "admin."], function () {
-    Route::resource('/', SchoolController::class)->only('index', 'store');
+    // Route::resource('/', SchoolController::class)->only('index', 'store');
     Route::post('/school/{school}', [SchoolController::class, 'update']);
     Route::get('/school/{school}', [SchoolController::class, 'destroy']);
     Route::get('/canteen', [CanteenController::class, 'index']);

@@ -34,7 +34,7 @@ class AuthController extends Controller
             $passwordMatch = Hash::check($password, $admin->password);
             if ($passwordMatch) {
                 Auth::login($admin);
-                return redirect("/admin");
+                return redirect("/admin/canteen");
             } else {
                 return redirect("/")->withErrors(['msg' => 'Incorect password']);
             }

@@ -4,8 +4,8 @@
 
 <x-school-nav />
 
-<div class="bg-gray-100 py-6">
-    <div class="max-w-2xl mx-auto">
+<div>
+    <div class="bg-gray-100 p-6 max-w-2xl mx-auto">
         <h2 class="text-2xl font-bold mb-4">Update your details</h2>
         <form action="/school/settings" method="POST">
             @if($errors->any())

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Guardian;
 use App\Models\Limit;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,7 +39,11 @@ class LimitController extends Controller
             'student' => 'required|numeric',
             'amount' => 'required|numeric',
         ]);
-
+        if ($request->password != null) {
+            $student = Student::find($request->student);
+            $student->password = bcrypt($request->password);
+            $student->update();
+        }
         $amount = Limit::where('student_id', Auth::guard('parent')->user()->student_id)->first();
         if ($amount == null) {
             $limit = new Limit;

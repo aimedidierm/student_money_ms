@@ -2,11 +2,11 @@
     <div class="max-w-screen-xl px-4 py-3 mx-auto">
         <div class="flex items-center">
             <ul class="flex flex-row font-medium mt-0 mr-6 space-x-8 text-sm">
-                <li>
+                {{-- <li>
                     <a href="/admin"
                         class="{{ request()->is('admin') ? 'text-blue-600 dark:text-blue-600' : 'text-gray-900 dark:text-white' }} hover:underline"
                         aria-current="page">Schools</a>
-                </li>
+                </li> --}}
                 <li>
                     <a href="/admin/canteen"
                         class="{{ request()->is('admin/canteen') ? 'text-blue-600 dark:text-blue-600' : 'text-gray-900 dark:text-white' }} hover:underline">Canteen</a>
