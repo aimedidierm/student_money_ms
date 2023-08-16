@@ -21,7 +21,7 @@
         <button data-modal-target="addNewModal" data-modal-toggle="addNewModal"
             class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             type="button">
-            Add new
+            Add new student
         </button>
         @if($errors->any())<span style="color: red;"> {{$errors->first()}}</span>@endif
         <div id="addNewModal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
