@@ -100,6 +100,8 @@ class TransactionController extends Controller
                     $endOfDay = $now->copy()->endOfDay();
                     $total = Transaction::whereBetween('created_at', [$startOfDay, $endOfDay])
                         ->where('student_id', $student->id)
+                        ->where('guardian_id', null)
+                        ->where('canteen_id', Auth::guard('canteen')->id())
                         ->sum('amount');
                     $total = $total + $request->amount;
                     if ($total <= $limit->amount) {
