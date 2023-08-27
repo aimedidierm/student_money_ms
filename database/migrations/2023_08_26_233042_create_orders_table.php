@@ -11,18 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->text('comment');
             $table->float('amount')->default(0.00);
-            $table->enum('status', ['debit', 'credit']);
-            $table->unsignedBigInteger('student_id')->nullable();
+            $table->unsignedBigInteger('student_id');
             $table->foreign('student_id')->on('students')->references('id')->onDelete("CASCADE");
-            $table->unsignedBigInteger('canteen_id')->nullable();
-            $table->foreign('canteen_id')->on('canteens')->references('id')->onDelete("CASCADE");
-            $table->unsignedBigInteger('guardian_id')->nullable();
+            $table->unsignedBigInteger('guardian_id');
             $table->foreign('guardian_id')->on('guardians')->references('id')->onDelete("CASCADE");
-            $table->unsignedBigInteger('school_id');
-            $table->foreign('school_id')->on('schools')->references('id')->onDelete("CASCADE");
             $table->timestamps();
         });
     }
@@ -32,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('orders');
     }
 };

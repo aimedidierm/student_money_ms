@@ -13,4 +13,9 @@ class Guardian extends Authenticatable
     {
         return $this->belongsTo(Student::class, 'student_id');
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'guardian_id');
+    }
 }

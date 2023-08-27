@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->float('amount');
             $table->unsignedBigInteger('student_id');
-            $table->foreign('student_id')->on('students')->references('id')->onDelete("restrict");
+            $table->foreign('student_id')->on('students')->references('id')->onDelete("CASCADE");
             $table->unsignedBigInteger('guardian_id');
-            $table->foreign('guardian_id')->on('guardians')->references('id')->onDelete("restrict");
+            $table->foreign('guardian_id')->on('guardians')->references('id')->onDelete("CASCADE");
             $table->timestamps();
         });
     }

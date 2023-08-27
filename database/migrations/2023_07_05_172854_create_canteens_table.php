@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->float('balance')->default(0.00);
             $table->unsignedBigInteger('school_id');
-            $table->foreign('school_id')->on('schools')->references('id')->onDelete("restrict");
+            $table->foreign('school_id')->on('schools')->references('id')->onDelete("CASCADE");
             $table->timestamps();
         });
     }

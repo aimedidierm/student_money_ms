@@ -16,11 +16,11 @@ return new class extends Migration
             $table->float('amount')->default(0.00);
             $table->string('phone')->nullable();
             $table->unsignedBigInteger('student_id')->nullable();
-            $table->foreign('student_id')->on('students')->references('id')->onDelete("restrict");
+            $table->foreign('student_id')->on('students')->references('id')->onDelete("CASCADE");
             $table->unsignedBigInteger('canteen_id')->nullable();
-            $table->foreign('canteen_id')->on('canteens')->references('id')->onDelete("restrict");
+            $table->foreign('canteen_id')->on('canteens')->references('id')->onDelete("CASCADE");
             $table->unsignedBigInteger('school_id');
-            $table->foreign('school_id')->on('schools')->references('id')->onDelete("restrict");
+            $table->foreign('school_id')->on('schools')->references('id')->onDelete("CASCADE");
             $table->timestamps();
         });
     }

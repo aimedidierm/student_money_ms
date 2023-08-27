@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Models\Withdraw;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Paypack\Paypack;
 
 class WithdrawController extends Controller
 {
@@ -104,10 +105,15 @@ class WithdrawController extends Controller
 
     public function canteenWithdraw(Request $request)
     {
-        $request->validate([
-            'amount' => 'required|numeric',
-            'phone' => 'required|numeric',
-        ]);
+        $request->validate(
+            [
+                'amount' => 'required|numeric',
+                'phone' => 'required|numeric|regex:/^07\d{8}$/',
+            ],
+            $messages = [
+                'phone.regex' => 'The phone number must start with "07" and be 10 digits long.'
+            ]
+        );
         $canteen = Canteen::find(Auth::guard('canteen')->id());
         if ($request->amount <= $canteen->balance) {
             $newBalance = $canteen->balance - $request->amount;
@@ -127,9 +133,25 @@ class WithdrawController extends Controller
             $transaction->school_id = Auth::guard('canteen')->user()->school_id;
             $transaction->created_at = now();
             $transaction->save();
+            $paypackInstance = $this->paypackConfig()->Cashout([
+                "amount" => $request->amount,
+                "phone" => $request->phone,
+            ]);
             return redirect('/canteen/withdraw');
         } else {
             return redirect('/canteen/withdraw')->withErrors('Insuficient balance');
         }
+    }
+
+    public function paypackConfig()
+    {
+        $paypack = new Paypack();
+
+        $paypack->config([
+            'client_id' => env('PAYPACK_CLIENT_ID'),
+            'client_secret' => env('PAYPACK_CLIENT_SECRET'),
+        ]);
+
+        return $paypack;
     }
 }

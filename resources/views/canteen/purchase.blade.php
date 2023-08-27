@@ -23,6 +23,11 @@
                     placeholder="Enter amount" required>
             </div>
             <div class="mb-4">
+                <label for="comment" class="block font-medium mb-2">Orders: </label>
+                <textarea type="text" id="comment" name="comment"
+                    class="w-full border border-gray-300 rounded px-4 py-2" required> </textarea>
+            </div>
+            <div class="mb-4">
                 <label for="password" class="block font-medium mb-2">Password: </label>
                 <input type="password" id="password" name="password"
                     class="w-full border border-gray-300 rounded px-4 py-2" placeholder="Enter your password" required>

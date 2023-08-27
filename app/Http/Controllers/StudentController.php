@@ -7,6 +7,8 @@ use App\Models\Student;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Paypack\Paypack;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class StudentController extends Controller
 {
@@ -121,7 +123,10 @@ class StudentController extends Controller
 
         if ($student != null) {
 
-            //Send request to phone
+            $paypackInstance = $this->paypackConfig()->Cashin([
+                "amount" => $request->amount,
+                "phone" => $request->phone,
+            ]);
 
             //Enter data in pending table
 
@@ -141,5 +146,25 @@ class StudentController extends Controller
         } else {
             return back()->withErrors('Student not found');
         }
+    }
+
+    public function paypackConfig()
+    {
+        $paypack = new Paypack();
+
+        $paypack->config([
+            'client_id' => env('PAYPACK_CLIENT_ID'),
+            'client_secret' => env('PAYPACK_CLIENT_SECRET'),
+        ]);
+
+        return $paypack;
+    }
+
+    public function report()
+    {
+        $students = Student::latest()->get();
+        $students->load('parent');
+        $pdf = Pdf::loadView('school.report', ['students' => $students]);
+        return $pdf->download('sudentsList.pdf');
     }
 }

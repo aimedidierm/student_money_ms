@@ -13,4 +13,14 @@ class Student extends Model
     {
         return $this->belongsTo(School::class, 'school_id');
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'student_id');
+    }
+
+    public function parent()
+    {
+        return $this->hasOne(Guardian::class, 'student_id');
+    }
 }

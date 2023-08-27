@@ -13,6 +13,11 @@
                         manager</a>
                 </li>
                 <li>
+                    <a href="/parent/orders"
+                        class="{{ request()->is('parent/orders') ? 'text-blue-600 dark:text-blue-600' : 'text-gray-900 dark:text-white' }} hover:underline">Student
+                        orders</a>
+                </li>
+                <li>
                     <a href="/parent/settings"
                         class="{{ request()->is('parent/settings') ? 'text-blue-600 dark:text-blue-600' : 'text-gray-900 dark:text-white' }} hover:underline">Settings</a>
                 </li>
