@@ -46,6 +46,7 @@ Route::group(["prefix" => "school", "middleware" => ["auth:school", "isSchool"],
     Route::post('/students/{student}', [StudentController::class, 'update']);
     Route::get('/students/{student}', [StudentController::class, 'destroy']);
     Route::get('/parents', [GuardianController::class, 'create']);
+    Route::delete('/parents/{guardian}', [GuardianController::class, 'destroy']);
     Route::post('/parents/update', [GuardianController::class, 'update']);
     Route::get('/canteen', [CanteenController::class, 'schoolList']);
     Route::put('/canteen', [CanteenController::class, 'update']);

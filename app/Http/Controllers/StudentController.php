@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Paypack\Paypack;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
 
 class StudentController extends Controller
 {
@@ -164,7 +165,16 @@ class StudentController extends Controller
     {
         $students = Student::latest()->get();
         $students->load('parent');
-        $pdf = Pdf::loadView('school.report', ['students' => $students]);
-        return $pdf->download('sudentsList.pdf');
+        // $pdf = Pdf::loadView('school.report', ['students' => $students]);
+
+        // // return $pdf->download('list.pdf');
+        // echo $pdf->output();
+        $view = view('school.report', ['students' => $students]);
+        // return $view;
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($view);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+        $dompdf->stream();
     }
 }

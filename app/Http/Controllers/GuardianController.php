@@ -112,7 +112,8 @@ class GuardianController extends Controller
      */
     public function destroy(Guardian $guardian)
     {
-        //
+        $guardian->delete();
+        return redirect('school/parents');
     }
 
     public function parentShow()

@@ -25,7 +25,7 @@
                 Add new student
             </button>
             <a href="/school/report"
-                class="block text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 type="button">
                 Generate report
             </a>
@@ -85,13 +85,13 @@
                         <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             Name
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             Reg N
                         </th>
                         <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             Balance
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             Time
                         </th>
                         <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
@@ -114,12 +114,12 @@
                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                             {{$item->name}}
                         </th>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                             {{$item->regNumber}}
                         </td>
                         <td class="px-2 py-2 bg-gray-50 dark:bg-gray-800">
                             {{$item->balance}} Rwf
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                             {{$item->created_at}}
                         </td>
                         <td class="px-2 py-2 bg-gray-50 dark:bg-gray-800">

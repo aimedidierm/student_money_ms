@@ -101,53 +101,57 @@ class TransactionController extends Controller
                 if ($guardian != null) {
                     if ($request->amount <= $student->balance) {
                         $limit = Limit::where('student_id', $student->id)->first();
-                        $now = Carbon::now();
-                        $startOfDay = $now->copy()->startOfDay();
-                        $endOfDay = $now->copy()->endOfDay();
-                        $total = Transaction::whereBetween('created_at', [$startOfDay, $endOfDay])
-                            ->where('student_id', $student->id)
-                            ->where('guardian_id', null)
-                            ->where('canteen_id', Auth::guard('canteen')->id())
-                            ->sum('amount');
-                        $total = $total + $request->amount;
-                        if ($total <= $limit->amount) {
-                            $newBalance = $student->balance - $request->amount;
-                            $studentModel = Student::find($student->id);
-                            $studentModel->balance = $newBalance;
-                            $studentModel->update();
-                            $canteenModel = Canteen::find(Auth::id());
-                            $canteenModel->balance = Auth::guard('canteen')->user()->balance + $request->amount;
-                            $canteenModel->update();
-                            $transaction = new Transaction;
-                            $transaction->amount = $request->amount;
-                            $transaction->status = 'debit';
-                            $transaction->student_id = $student->id;
-                            $transaction->canteen_id = Auth::guard('canteen')->id();
-                            $transaction->school_id = Auth::guard('canteen')->user()->school_id;
-                            $transaction->created_at = now();
-                            $transaction->updated_at = null;
-                            $transaction->save();
-                            $order = new Order;
-                            $order->comment = $request->comment;
-                            $order->amount = $request->amount;
-                            $order->student_id = $student->id;
-                            $order->guardian_id = $guardian->id;
-                            $order->created_at = now();
-                            $order->save();
-
-                            $message = "Dear parent " . $guardian->name . " your student " . $student->name . " had payed for " . $request->comment . " by total amount of " . $request->amount . "Rwf thank you.";
-                            $sms = new Sms();
-                            $sms->recipients([$guardian->phone])
-                                ->message($message)
-                                ->sender(env('SMS_SENDERID'))
-                                ->username(env('SMS_USERNAME'))
-                                ->password(env('SMS_PASSWORD'))
-                                ->apiUrl("www.intouchsms.co.rw/api/sendsms/.json")
-                                ->callBackUrl("");
-                            $sms->send();
-                            return redirect('/canteen');
+                        if($limit != null){
+                            $now = Carbon::now();
+                            $startOfDay = $now->copy()->startOfDay();
+                            $endOfDay = $now->copy()->endOfDay();
+                            $total = Transaction::whereBetween('created_at', [$startOfDay, $endOfDay])
+                                ->where('student_id', $student->id)
+                                ->where('guardian_id', null)
+                                ->where('canteen_id', Auth::guard('canteen')->id())
+                                ->sum('amount');
+                            $total = $total + $request->amount;
+                            if ($total <= $limit->amount) {
+                                $newBalance = $student->balance - $request->amount;
+                                $studentModel = Student::find($student->id);
+                                $studentModel->balance = $newBalance;
+                                $studentModel->update();
+                                $canteenModel = Canteen::find(Auth::id());
+                                $canteenModel->balance = Auth::guard('canteen')->user()->balance + $request->amount;
+                                $canteenModel->update();
+                                $transaction = new Transaction;
+                                $transaction->amount = $request->amount;
+                                $transaction->status = 'debit';
+                                $transaction->student_id = $student->id;
+                                $transaction->canteen_id = Auth::guard('canteen')->id();
+                                $transaction->school_id = Auth::guard('canteen')->user()->school_id;
+                                $transaction->created_at = now();
+                                $transaction->updated_at = null;
+                                $transaction->save();
+                                $order = new Order;
+                                $order->comment = $request->comment;
+                                $order->amount = $request->amount;
+                                $order->student_id = $student->id;
+                                $order->guardian_id = $guardian->id;
+                                $order->created_at = now();
+                                $order->save();
+    
+                                $message = "Dear parent " . $guardian->name . " your child " . $student->name . " had payed for " . $request->comment . " by total amount of " . $request->amount . "Rwf thank you.";
+                                $sms = new Sms();
+                                $sms->recipients([$guardian->phone])
+                                    ->message($message)
+                                    ->sender(env('SMS_SENDERID'))
+                                    ->username(env('SMS_USERNAME'))
+                                    ->password(env('SMS_PASSWORD'))
+                                    ->apiUrl("www.intouchsms.co.rw/api/sendsms/.json")
+                                    ->callBackUrl("");
+                                $sms->send();
+                                return redirect('/canteen');
+                            } else {
+                                return redirect('/canteen')->withErrors('You exceed daily limit');
+                            }
                         } else {
-                            return redirect('/canteen')->withErrors('You exceed daily limit');
+                            return redirect('/canteen')->withErrors("Your parent doen't set daily limit");
                         }
                     } else {
                         return redirect('/canteen')->withErrors('Insuficient balance');

@@ -27,13 +27,13 @@
                         <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             Name
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             Student
                         </th>
                         <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             School
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             Phone
                         </th>
                         <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
@@ -56,7 +56,7 @@
                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                             {{$item->name}}
                         </th>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                             @if ($item->students != null)
                             {{$item->students->name}}
                             @else
@@ -69,7 +69,7 @@
                             @else
                             None
                             @endif
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                             {{$item->phone}}
                         </td>
                         <td class="px-2 py-2 bg-gray-50 dark:bg-gray-800">

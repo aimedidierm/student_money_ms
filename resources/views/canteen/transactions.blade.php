@@ -27,13 +27,13 @@
                         <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             Status
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             Amount
                         </th>
                         <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             Student
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
                             Time
                         </th>
                     </tr>
@@ -57,7 +57,7 @@
                             Debited
                             @endif
                         </th>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                             {{$item->amount}} Rwf
                         </td>
                         <td class="px-2 py-2 bg-gray-50 dark:bg-gray-800">
@@ -65,7 +65,7 @@
                             {{$item->students->name}}
                             @endif
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
                             {{$item->created_at}}
                         </td>
                     </tr>
